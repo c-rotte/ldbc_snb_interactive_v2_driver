@@ -335,6 +335,8 @@ class ParameterGeneration():
 
             df_out = (parameter_df.groupby(column_ids + [group_no], dropna=False, as_index=False)
                 .agg(aggregate_rules))
+            df_out['useFrom'] = df_out['useFrom'].dt.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+            df_out['useUntil'] = df_out['useUntil'].dt.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
             self.cursor.execute(f"CREATE TABLE Q_{query_variant}_filtered AS SELECT * FROM df_out ORDER BY useFROM")
             self.cursor.execute(f"COPY 'Q_{query_variant}_filtered' TO '../parameters/interactive-{query_variant}.parquet' WITH (FORMAT PARQUET);")
         print("============ Parameters exported ============")
